@@ -1,46 +1,121 @@
-# Getting Started with Create React App
+# ⚛️ Despliegue de Aplicación React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este documento describe los pasos necesarios para **desplegar una aplicación React** en un entorno de producción.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 📋 Requisitos del Servidor
 
-### `npm start`
+- **Node.js >= 16.x**
+- **npm o yarn**
+- **Servidor Web**: Nginx, Apache o cualquier servidor de archivos estáticos (como Vercel o Netlify)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🚀 Pasos para el Despliegue
 
-### `npm test`
+### 1. Clonar el repositorio
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone https://github.com/tu-usuario/tu-repo-react.git
+cd tu-repo-react
+```
 
-### `npm run build`
+### 2. Instalar dependencias
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Si usas **npm**:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Si usas **yarn**:
 
-### `npm run eject`
+```bash
+yarn install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### 3. Configurar variables de entorno
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Crea un archivo `.env` en la raíz si necesitas configurar variables personalizadas:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+```
+REACT_APP_API_URL=https://api.tudominio.com
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+> Las variables deben empezar con `REACT_APP_` para ser accesibles desde el código.
 
-## Learn More
+### 4. Generar la versión de producción
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm run build
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+o
+
+```bash
+yarn build
+```
+
+Esto generará una carpeta `/build` con todos los archivos listos para producción.
+
+---
+
+## 🌐 Subir al servidor web
+
+Puedes servir los archivos estáticos generados desde cualquier servidor web. Aquí algunos ejemplos:
+
+### Opción 1: Servir con Nginx
+
+```nginx
+server {
+    listen 80;
+    server_name tudominio.com;
+
+    root /ruta/a/tu-repo-react/build;
+    index index.html index.htm;
+
+    location / {
+        try_files $uri /index.html;
+    }
+}
+```
+
+### Opción 2: Subir a Vercel, Netlify o GitHub Pages
+
+- **Vercel**: Solo haz `vercel --prod` (requiere configuración previa)
+- **Netlify**: Arrastra la carpeta `build` a la interfaz de Netlify o usa `netlify deploy`
+- **GitHub Pages**: Puedes usar `gh-pages`:
+
+```bash
+npm install gh-pages --save-dev
+```
+
+En tu `package.json`:
+
+```json
+"scripts": {
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
+}
+```
+
+Y luego:
+
+```bash
+npm run deploy
+```
+
+---
+
+## 🧪 Comprobaciones
+
+Accede en el navegador:
+
+```
+http://tudominio.com
+```
+
+Verifica que tu aplicación se carga correctamente.
+
+---
